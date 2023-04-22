@@ -1,8 +1,8 @@
 import {Calculator} from './calculator';
 
-const calc = new Calculator();
+const calculator = Calculator.getInstance();
 
-console.log(calc.evaluateReversePolishNotationExpression('10 3 +'));
+console.log(calculator.evaluateReversePolishNotationExpression('10 3 +'));
 
 // 10 3 +
 // 13

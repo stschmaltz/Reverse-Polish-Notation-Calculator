@@ -19,6 +19,27 @@ class Calculator {
     return Calculator.instance;
   }
 
+  private performOperation(
+    operator: string,
+    operand1: number,
+    operand2: number
+  ): number {
+    const operationMap: Record<string, Function> = {
+      '+': (operand1: number, operand2: number) => operand1 + operand2,
+      '-': (operand1: number, operand2: number) => operand1 - operand2,
+      '*': (operand1: number, operand2: number) => operand1 * operand2,
+      '/': (operand1: number, operand2: number) => operand1 / operand2,
+      '^': (operand1: number, operand2: number) => operand1 ** operand2,
+    };
+
+    const operation = operationMap[operator];
+    if (!operation) {
+      throw new Error(`Invalid operator: ${operator}`);
+    }
+
+    return operation(operand1, operand2);
+  }
+
   public evaluateReversePolishNotationExpression(expression: string): number {
     console.log('expression', expression);
 
@@ -38,7 +59,16 @@ class Calculator {
         const operand1 = stack.pop();
 
         console.log('operand1, operand2', operand1, operand2);
-        // do the operation
+
+        if (operand1 === undefined || operand2 === undefined) {
+          throw new Error('Invalid RPN expression');
+        }
+
+        const result = this.performOperation(element, operand1, operand2);
+
+        console.log(result);
+
+        return result;
       }
     }
 

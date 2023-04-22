@@ -41,16 +41,13 @@ class Calculator {
   }
 
   public evaluateReversePolishNotationExpression(expression: string): number {
-    console.log('expression', expression);
+    // console.log('Evaluating expression', expression);
 
     const stack: number[] = [];
     const elements: string[] = expression.split(' ');
 
     for (const element of elements) {
-      console.log('element', element);
-
       const elementType = this.parser.determineElementType(element);
-      console.log('elementType', elementType);
 
       if (elementType === ElementType.OPERAND) {
         stack.push(Number(element));
@@ -58,7 +55,11 @@ class Calculator {
         const operand2 = stack.pop();
         const operand1 = stack.pop();
 
-        console.log('operand1, operand2', operand1, operand2);
+        // console.log('operator, operand1, operand2', {
+        //   operator: element,
+        //   operand1,
+        //   operand2,
+        // });
 
         if (operand1 === undefined || operand2 === undefined) {
           throw new Error('Invalid RPN expression');
@@ -66,13 +67,15 @@ class Calculator {
 
         const result = this.performOperation(element, operand1, operand2);
 
-        console.log(result);
-
-        return result;
+        stack.push(result);
       }
     }
 
-    return 0;
+    if (stack.length !== 1) {
+      throw new Error('Invalid RPN expression');
+    }
+
+    return stack[0];
   }
 }
 

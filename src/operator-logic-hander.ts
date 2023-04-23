@@ -13,61 +13,72 @@ class OperatorLogicHandler {
   // Using an enum as a key forces us to have a handler for every possible operator
   public operationMap: Record<
     Operator,
-    {handler: Function; numberOfOperands: number}
+    {handler: Function; requiredNumberOfOperands: number}
   > = {
     [Operator.ADDITION]: {
       handler: this.addition,
-      numberOfOperands: 2,
+      requiredNumberOfOperands: 2,
     },
     [Operator.SUBTRACTION]: {
       handler: this.subtraction,
-      numberOfOperands: 2,
+      requiredNumberOfOperands: 2,
     },
     [Operator.MULTIPLICATION]: {
       handler: this.multiplication,
-      numberOfOperands: 2,
+      requiredNumberOfOperands: 2,
     },
     [Operator.DIVISION]: {
       handler: this.division,
-      numberOfOperands: 2,
+      requiredNumberOfOperands: 2,
     },
     [Operator.EXPONENTIATION]: {
       handler: this.exponentiation,
-      numberOfOperands: 2,
+      requiredNumberOfOperands: 2,
     },
     [Operator.SINE]: {
       handler: this.sine,
-      numberOfOperands: 1,
+      requiredNumberOfOperands: 1,
     },
     [Operator.COSINE]: {
       handler: this.cosine,
-      numberOfOperands: 1,
+      requiredNumberOfOperands: 1,
     },
     [Operator.TANGENT]: {
       handler: this.tangent,
-      numberOfOperands: 1,
+      requiredNumberOfOperands: 1,
     },
   };
 
+  /**
+   * performOperation: Perform an operation on a set of operands, each operation has a handler function and a number of operands required.
+   * @param operator: Operator - the operation to perform
+   * @param operands: number[] - the operands to perform the operation on
+   * @returns number - the result of the operation
+   */
   public performOperation(operator: Operator, ...operands: number[]): number {
     const operation = this.operationMap[operator];
     if (!operation) {
       throw new Error(`Invalid operator: ${operator}`);
     }
 
-    if (operands.length !== this.getNumberOfOperands(operator)) {
+    if (operands.length !== this.getRequiredNumberOfOperands(operator)) {
       throw new Error(`Invalid number of operands for operator: ${operator}`);
     }
 
     return operation.handler(...operands);
   }
 
-  public getNumberOfOperands(operator: Operator): number {
+  /**
+   * getRequiredNumberOfOperands: Get the number of operands required for a given operator
+   * @param operator: Operator - the operator to get the number of operands for
+   * @returns number - the number of operands required for the operator
+   */
+  public getRequiredNumberOfOperands(operator: Operator): number {
     const operation = this.operationMap[operator];
     if (!operation) {
       throw new Error(`Invalid operator: ${operator}`);
     }
-    return operation.numberOfOperands;
+    return operation.requiredNumberOfOperands;
   }
 
   private addition(operand1: number, operand2: number): number {

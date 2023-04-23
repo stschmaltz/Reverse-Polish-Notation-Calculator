@@ -16,17 +16,22 @@ class ReversePolishNotationCalculator {
   }
 
   public evaluateExpression(expression: string): number {
-    const elements: string[] = expression.split(' ');
+    const expressionElements: string[] = expression.split(' ');
 
-    const result = elements.reduce((stack: number[], element: string) => {
-      if (this.isOperand(element)) {
-        return this.processOperand(stack, Number(element));
-      } else if (this.isOperator(element)) {
-        return this.processOperator(stack, element);
-      } else {
-        throw new Error(`Invalid RPN expression, invalid element: ${element}`);
-      }
-    }, []);
+    const result = expressionElements.reduce(
+      (stack: number[], element: string) => {
+        if (this.isOperand(element)) {
+          return this.processOperand(stack, Number(element));
+        } else if (this.isOperator(element)) {
+          return this.processOperator(stack, element);
+        } else {
+          throw new Error(
+            `Invalid RPN expression, invalid element: ${element}`
+          );
+        }
+      },
+      []
+    );
 
     if (result.length !== 1) {
       throw new Error(
@@ -51,22 +56,22 @@ class ReversePolishNotationCalculator {
   }
 
   private processOperator(stack: number[], operator: Operator): number[] {
-    const numberOfOperands =
-      this.operatorLogicHandler.getNumberOfOperands(operator);
-    if (stack.length < numberOfOperands) {
+    const requiredNumberOfOperands =
+      this.operatorLogicHandler.getRequiredNumberOfOperands(operator);
+    if (stack.length < requiredNumberOfOperands) {
       throw new Error(
         `Invalid RPN expression, not enough operands for operator: ${operator}`
       );
     }
 
-    const operands = stack.slice(-numberOfOperands);
+    const operands = stack.slice(-requiredNumberOfOperands);
     const result = this.operatorLogicHandler.performOperation(
       operator,
       ...operands
     );
 
     // pop operands off the stack and push the result
-    return [...stack.slice(0, -numberOfOperands), result];
+    return [...stack.slice(0, -requiredNumberOfOperands), result];
   }
 }
 

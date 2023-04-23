@@ -102,6 +102,10 @@ class OperatorLogicHandler {
   }
 
   private division(operand1: number, operand2: number): number {
+    if (operand2 === 0) {
+      throw new Error('Division by 0 is not supported.');
+    }
+
     return operand1 / operand2;
   }
 

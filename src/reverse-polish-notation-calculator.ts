@@ -1,4 +1,4 @@
-import {Operator, OperatorLogicHandler} from './operator-logic-hander';
+import {Operator, OperatorLogicHandler} from './operator-logic-handler';
 
 class ReversePolishNotationCalculator {
   private static instance: ReversePolishNotationCalculator;
@@ -77,6 +77,7 @@ class ReversePolishNotationCalculator {
   private processOperator(stack: number[], operator: Operator): number[] {
     const requiredNumberOfOperands =
       this.operatorLogicHandler.getRequiredNumberOfOperands(operator);
+
     if (stack.length < requiredNumberOfOperands) {
       throw new Error(
         `Invalid RPN expression, not enough operands for operator: ${operator}`

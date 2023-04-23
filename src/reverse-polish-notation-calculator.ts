@@ -23,23 +23,19 @@ class ReversePolishNotationCalculator {
       if (this.isOperand(element)) {
         stack.push(Number(element));
       } else if (this.isOperator(element)) {
-        const operand2 = stack.pop();
-        const operand1 = stack.pop();
-
-        if (operand1 === undefined || operand2 === undefined) {
+        const numberOfOperands =
+          this.operatorLogicHandler.getNumberOfOperands(element);
+        if (stack.length < numberOfOperands) {
           throw new Error(
-            `Invalid RPN expression, not enough operands for operator:${{
-              operand1,
-              operand2,
-              element,
-            }}`
+            `Invalid RPN expression, not enough operands for operator: ${element}`
           );
         }
 
+        const operands = stack.slice(-numberOfOperands);
+
         const result = this.operatorLogicHandler.performOperation(
           element,
-          operand1,
-          operand2
+          ...operands
         );
         stack.push(result);
       } else {

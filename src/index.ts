@@ -30,8 +30,8 @@ for (const testExpression of testExpressions) {
   console.log(
     `${
       expectedAnswer === result
-        ? 'CORRECT'
-        : `INCORRECT, expected ${expectedAnswer}, real ${result}`
+        ? 'CORRECT \n'
+        : `INCORRECT, expected ${expectedAnswer}, real ${result} \n`
     }`
   );
 }

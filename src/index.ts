@@ -1,6 +1,6 @@
-import {Calculator} from './calculator';
+import {ReversePolishNotationCalculator} from './reverse-polish-notation-calculator';
 
-const calculator = Calculator.getInstance();
+const calculator = ReversePolishNotationCalculator.getInstance();
 
 const testExpressions: {expression: string; expectedAnswer: number}[] = [
   {expression: '10 3 +', expectedAnswer: 13},
@@ -15,7 +15,7 @@ const testExpressions: {expression: string; expectedAnswer: number}[] = [
 
 for (const testExpression of testExpressions) {
   const {expression, expectedAnswer} = testExpression;
-  const result = calculator.evaluateReversePolishNotationExpression(expression);
+  const result = calculator.evaluateExpression(expression);
 
   console.log(`Result of Expression '${expression}' is `, result);
   console.log(

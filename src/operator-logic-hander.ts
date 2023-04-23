@@ -10,50 +10,54 @@ export enum Operator {
 }
 
 class OperatorLogicHandler {
-  // Using an enum as a key forces us to have a handler for every possible operator
+  // Using an enum as the key forces us to have a handler for every possible operator
   public operationMap: Record<
     Operator,
     {handler: Function; requiredNumberOfOperands: number}
   > = {
     [Operator.ADDITION]: {
-      handler: this.addition,
+      handler: this.addition.bind(this),
       requiredNumberOfOperands: 2,
     },
     [Operator.SUBTRACTION]: {
-      handler: this.subtraction,
+      handler: this.subtraction.bind(this),
       requiredNumberOfOperands: 2,
     },
     [Operator.MULTIPLICATION]: {
-      handler: this.multiplication,
+      handler: this.multiplication.bind(this),
       requiredNumberOfOperands: 2,
     },
     [Operator.DIVISION]: {
-      handler: this.division,
+      handler: this.division.bind(this),
       requiredNumberOfOperands: 2,
     },
     [Operator.EXPONENTIATION]: {
-      handler: this.exponentiation,
+      handler: this.exponentiation.bind(this),
       requiredNumberOfOperands: 2,
     },
     [Operator.SINE]: {
-      handler: this.sine,
+      handler: this.sine.bind(this),
       requiredNumberOfOperands: 1,
     },
     [Operator.COSINE]: {
-      handler: this.cosine,
+      handler: this.cosine.bind(this),
       requiredNumberOfOperands: 1,
     },
     [Operator.TANGENT]: {
-      handler: this.tangent,
+      handler: this.tangent.bind(this),
       requiredNumberOfOperands: 1,
     },
   };
 
   /**
    * performOperation: Perform an operation on a set of operands, each operation has a handler function and a number of operands required.
+   * Supported operators: +, -, *, /, ^, sin, cos, tan
+   * The trigonometric functions expect the operand to be in degrees
+   *
    * @param operator: Operator - the operation to perform
    * @param operands: number[] - the operands to perform the operation on
    * @returns number - the result of the operation
+   * @throws If the operator is not supported or the number of operands is incorrect an error will be thrown.
    */
   public performOperation(operator: Operator, ...operands: number[]): number {
     const operation = this.operationMap[operator];
@@ -70,14 +74,18 @@ class OperatorLogicHandler {
 
   /**
    * getRequiredNumberOfOperands: Get the number of operands required for a given operator
+   *
    * @param operator: Operator - the operator to get the number of operands for
    * @returns number - the number of operands required for the operator
+   * @throws if the operator is not supported an error will be thrown
    */
   public getRequiredNumberOfOperands(operator: Operator): number {
     const operation = this.operationMap[operator];
+
     if (!operation) {
       throw new Error(`Invalid operator: ${operator}`);
     }
+
     return operation.requiredNumberOfOperands;
   }
 
@@ -102,15 +110,25 @@ class OperatorLogicHandler {
   }
 
   private sine(operand: number): number {
-    return Math.sin(operand);
+    const radians = this.toRadians(operand);
+
+    return Math.sin(radians);
   }
 
   private cosine(operand: number): number {
-    return Math.cos(operand);
+    const radians = this.toRadians(operand);
+
+    return Math.cos(radians);
   }
 
   private tangent(operand: number): number {
-    return Math.tan(operand);
+    const radians = this.toRadians(operand);
+
+    return Math.tan(radians);
+  }
+
+  private toRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
   }
 }
 

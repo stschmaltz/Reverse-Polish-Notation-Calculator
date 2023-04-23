@@ -7,6 +7,10 @@ class ReversePolishNotationCalculator {
     private operatorLogicHandler: OperatorLogicHandler = new OperatorLogicHandler()
   ) {}
 
+  /**
+   * getInstance: Get the singleton instance of the ReversePolishNotationCalculator
+   * @returns ReversePolishNotationCalculator - the singleton instance of the ReversePolishNotationCalculator
+   */
   public static getInstance(): ReversePolishNotationCalculator {
     if (!ReversePolishNotationCalculator.instance) {
       ReversePolishNotationCalculator.instance =
@@ -15,8 +19,23 @@ class ReversePolishNotationCalculator {
     return ReversePolishNotationCalculator.instance;
   }
 
+  /**
+   * evaluateExpression: Evaluate a reverse polish notation expression (https://en.wikipedia.org/wiki/Reverse_Polish_notation)
+   * Supports the following operators: +, -, *, /, ^, cos, sin, tan
+   *
+   * @param expression: string - the expression to evaluate
+   * @returns number - the result of the expression to max of 2 decimal places
+   * @throws Error - if the expression is invalid or the result is invalid
+   */
   public evaluateExpression(expression: string): number {
-    const expressionElements: string[] = expression.split(' ');
+    const expressionElements: string[] = expression
+      .trim()
+      .split(' ')
+      .filter(value => value !== '');
+
+    if (expressionElements.length === 0) {
+      return 0;
+    }
 
     const result = expressionElements.reduce(
       (stack: number[], element: string) => {
@@ -39,7 +58,7 @@ class ReversePolishNotationCalculator {
       );
     }
 
-    return result[0];
+    return Number(result[0].toFixed(2));
   }
 
   private isOperand(element: string): boolean {

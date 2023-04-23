@@ -16,40 +16,25 @@ class ReversePolishNotationCalculator {
   }
 
   public evaluateExpression(expression: string): number {
-    const stack: number[] = [];
     const elements: string[] = expression.split(' ');
 
-    for (const element of elements) {
+    const result = elements.reduce((stack: number[], element: string) => {
       if (this.isOperand(element)) {
-        stack.push(Number(element));
+        return this.processOperand(stack, Number(element));
       } else if (this.isOperator(element)) {
-        const numberOfOperands =
-          this.operatorLogicHandler.getNumberOfOperands(element);
-        if (stack.length < numberOfOperands) {
-          throw new Error(
-            `Invalid RPN expression, not enough operands for operator: ${element}`
-          );
-        }
-
-        const operands = stack.slice(-numberOfOperands);
-
-        const result = this.operatorLogicHandler.performOperation(
-          element,
-          ...operands
-        );
-        stack.push(result);
+        return this.processOperator(stack, element);
       } else {
         throw new Error(`Invalid RPN expression, invalid element: ${element}`);
       }
-    }
+    }, []);
 
-    if (stack.length !== 1) {
+    if (result.length !== 1) {
       throw new Error(
-        `Invalid RPN expression, expected a single result: ${stack}`
+        `Invalid RPN expression, expected a single result: ${result}`
       );
     }
 
-    return stack[0];
+    return result[0];
   }
 
   private isOperand(element: string): boolean {
@@ -58,6 +43,30 @@ class ReversePolishNotationCalculator {
 
   private isOperator(element: string): element is Operator {
     return Object.values(Operator).includes(element as Operator);
+  }
+
+  private processOperand(stack: number[], operand: number): number[] {
+    // push the operand onto the stack
+    return [...stack, operand];
+  }
+
+  private processOperator(stack: number[], operator: Operator): number[] {
+    const numberOfOperands =
+      this.operatorLogicHandler.getNumberOfOperands(operator);
+    if (stack.length < numberOfOperands) {
+      throw new Error(
+        `Invalid RPN expression, not enough operands for operator: ${operator}`
+      );
+    }
+
+    const operands = stack.slice(-numberOfOperands);
+    const result = this.operatorLogicHandler.performOperation(
+      operator,
+      ...operands
+    );
+
+    // pop operands off the stack and push the result
+    return [...stack.slice(0, -numberOfOperands), result];
   }
 }
 

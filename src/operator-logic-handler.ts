@@ -60,10 +60,7 @@ class OperatorLogicHandler {
    * @throws If the operator is not supported or the number of operands is incorrect an error will be thrown.
    */
   public performOperation(operator: Operator, ...operands: number[]): number {
-    const operation = this.operationMap[operator];
-    if (!operation) {
-      throw new Error(`Invalid operator: ${operator}`);
-    }
+    const operation = this.getOperationOrThrow(operator);
 
     if (operands.length !== this.getRequiredNumberOfOperands(operator)) {
       throw new Error(`Invalid number of operands for operator: ${operator}`);
@@ -80,13 +77,19 @@ class OperatorLogicHandler {
    * @throws if the operator is not supported an error will be thrown
    */
   public getRequiredNumberOfOperands(operator: Operator): number {
+    const operation = this.getOperationOrThrow(operator);
+
+    return operation.requiredNumberOfOperands;
+  }
+
+  private getOperationOrThrow(operator: Operator) {
     const operation = this.operationMap[operator];
 
     if (!operation) {
       throw new Error(`Invalid operator: ${operator}`);
     }
 
-    return operation.requiredNumberOfOperands;
+    return operation;
   }
 
   private addition(operand1: number, operand2: number): number {

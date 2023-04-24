@@ -1,4 +1,6 @@
 {
+  "name": "rpn-calculator",
+  "description": "A Reverse Polish Notation calculator.",
   "scripts": {
     "start": "npx ts-node ./src/index.ts",
     "lint": "gts lint",
